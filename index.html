@@ -1,0 +1,51 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>Synth Picker</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <style>
+         h2 {
+             display: inline;
+             align-content: center;
+             color: palegoldenrod;
+         }
+         .synth-role {
+             display: contents;
+         }
+         .randomize-all {
+             grid-column: 1/5;
+             padding: 1em;
+             margin: 1em;
+         }
+         select {
+             text-align: center;
+             background: antiquewhite;
+         }
+         #root {
+             display: grid;
+             grid-template-columns: 1fr 1fr 1fr 1fr;
+             grid-gap: 1em;
+             background: darkslateblue;
+             min-height: 98vh;
+             padding: 1vh;
+             border-radius: 1em;
+         }
+         body {
+             text-align: center;
+             background-image: linear-gradient(to top, black, darkblue);
+             color: antiquewhite;
+             align-content: center;
+             justify-content: center;
+         }
+         button {
+             background: antiquewhite;
+         }
+        </style>
+    </head>
+    <body>
+        <div id="root"></div>
+    </body>
+    <script src="picker.js"></script>
+</html>

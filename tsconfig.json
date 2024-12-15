@@ -1,0 +1,11 @@
+{
+    "compilerOptions": {
+        "target": "es2022",
+        "module": "eS2022",
+        "strict": false,
+        "sourceMap": true
+    },
+    "include": [
+        "picker.ts"
+    ]
+}
