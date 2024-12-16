@@ -1,6 +1,6 @@
 interface Synth {
     name: string;
-    style: "Hardware" | "Software";
+    style: "Hardware" | "MPC" | "Software";
     roles: string[];
     numberChannels: number;
 }
@@ -13,6 +13,12 @@ const roles = [
     "Drum",
 ]
 
+const styles = [
+    "Hardware",
+    "MPC",
+    "Software",
+]
+
 const synthList: Synth[] = [
     {
         name: "Hydrasynth",
@@ -21,7 +27,7 @@ const synthList: Synth[] = [
         numberChannels: 1
     },
     {
-        name: "Opsix",
+        name: "OpSix",
         style: "Hardware",
         roles: ["Lead", "Bass", "Pad"],
         numberChannels: 1
@@ -67,12 +73,6 @@ const synthList: Synth[] = [
         style: "Hardware",
         roles: ["Lead", "Bass", "Pad"],
         numberChannels: 1
-    },
-    {
-        name: "MPC",
-        style: "Hardware",
-        roles: ["Sequencer", "Lead", "Bass", "Pad", "Drum"],
-        numberChannels: 16 // Infinite?
     },
     {
         name: "Summit",
@@ -182,6 +182,91 @@ const synthList: Synth[] = [
         roles: ["Lead", "Bass", "Pad"],
         numberChannels: 1
     },
+    // MPC Internal
+    {
+        name: "MPC",
+        style: "MPC",
+        roles: ["Sequencer"],
+        numberChannels: 16 // Infinite?
+    },
+    {
+        name: "MPC Sampler",
+        style: "MPC",
+        roles: ["Lead", "Bass", "Pad", "Drum"],
+        numberChannels: 16
+    },
+    {
+        name: "MPC Fabric",
+        style: "MPC",
+        roles: ["Lead", "Bass", "Pad"],
+        numberChannels: 8
+    },
+    {
+        name: "MPC OPx4",
+        style: "MPC",
+        roles: ["Lead", "Bass", "Pad"],
+        numberChannels: 8
+    },
+    {
+        name: "MPC Jura",
+        style: "MPC",
+        roles: ["Lead", "Bass", "Pad"],
+        numberChannels: 8
+    },
+    {
+        name: "MPC Odyssey",
+        style: "MPC",
+        roles: ["Lead", "Bass", "Pad"],
+        numberChannels: 8
+    },
+    {
+        name: "MPC Drum Synth",
+        style: "MPC",
+        roles: ["Drum"],
+        numberChannels: 8
+    },
+    {
+        name: "MPC Instruments", // Piano, Organ, Strings.
+        style: "MPC",
+        roles: ["Lead", "Bass"],
+        numberChannels: 8
+    },
+    {
+        name: "MPC TubeSynth",
+        style: "MPC",
+        roles: ["Lead", "Bass", "Pad"],
+        numberChannels: 8
+    },
+    {
+        name: "MPC Sub Factory",
+        style: "MPC",
+        roles: ["Bass"],
+        numberChannels: 8
+    },
+    {
+        name: "MPC Bassline",
+        style: "MPC",
+        roles: ["Bass"],
+        numberChannels: 8
+    },
+    {
+        name: "MPC Mellotron",
+        style: "MPC",
+        roles: ["Lead", "Bass", "Pad"],
+        numberChannels: 8
+    },
+    {
+        name: "MPC Solina",
+        style: "MPC",
+        roles: ["Lead", "Bass", "Pad"], // Does bass make sense?
+        numberChannels: 8
+    },
+    {
+        name: "MPC Hype",
+        style: "MPC",
+        roles: ["Lead", "Bass", "Pad"],
+        numberChannels: 8
+    },
     // Software (Note all are listed as 16 channels, as there's no real limit)
     // Free
     {
@@ -228,9 +313,15 @@ const synthList: Synth[] = [
         numberChannels: 16
     },
     {
-        name: "Jura",
+        name: "Jura VST",
         style: "Software",
         roles: ["Lead", "Bass", "Pad"],
+        numberChannels: 16
+    },
+    {
+        name: "Sub Factory VST",
+        style: "Software",
+        roles: ["Bass"],
         numberChannels: 16
     },
     {
@@ -611,7 +702,7 @@ const synthList: Synth[] = [
     },
 ]
 
-let currentStyle = "Hybrid";
+const currentStyles = [...styles];
 
 class SynthRole extends HTMLDivElement {
     role: string;
@@ -669,7 +760,7 @@ class SynthRole extends HTMLDivElement {
             return true;
         }
         const channelsUsed = rolePickers.filter(role => role.synth === synth && role !== this).length;
-        if (channelsUsed >= synth.numberChannels || (synth.style !== currentStyle && currentStyle !== "Hybrid")) {
+        if (channelsUsed >= synth.numberChannels || !currentStyles.includes(synth.style)) {
             return false;
         }
         this.synth = synth;
@@ -677,13 +768,13 @@ class SynthRole extends HTMLDivElement {
         return true;
     }
 
-    setStyle(style: string) {
+    updateStyle() {
         for (const option of this._selection.options) {
             if (option.textContent === "None") {
                 continue;
             }
             const synth = synthList.find(synth => synth.name === option.textContent);
-            const hide = synth?.style !== style && style !== "Hybrid";
+            const hide = synth && !currentStyles.includes(synth.style);
             option.hidden = hide;
             if (hide && this.synth?.name === option.textContent) {
                 this.tryAssignSynth(undefined);
@@ -725,23 +816,24 @@ function randomizeAll() {
 const root = document.getElementById("root");
 const stylePicker = document.createElement("div");
 stylePicker.classList.add("style-picker");
-for (const style of ["Hardware", "Hybrid", "Software"]) {
-    const radio = document.createElement("input");
-    radio.type = "radio";
-    radio.name = "style";
-    radio.value = style;
-    radio.id = style;
-    radio.addEventListener("change", () => {
-        currentStyle = style;
-        rolePickers.forEach(role => role.setStyle(style));
+for (const style of styles) {
+    const check = document.createElement("input");
+    check.type = "checkbox";
+    check.value = style;
+    check.id = style;
+    check.checked = true;
+    check.addEventListener("change", () => {
+        if (check.checked) {
+            currentStyles.push(style);
+        } else {
+            currentStyles.splice(currentStyles.indexOf(style), 1);
+        }
+        rolePickers.forEach(role => role.updateStyle());
     });
-    if (style === currentStyle) {
-        radio.checked = true;
-    }
     const label = document.createElement("label");
     label.htmlFor = style;
     label.textContent = style;
-    stylePicker.appendChild(radio);
+    stylePicker.appendChild(check);
     stylePicker.appendChild(label);
 }
 root.appendChild(stylePicker);
