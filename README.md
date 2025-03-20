@@ -1,5 +1,7 @@
 Synth Picker
 ============
+![UI Snapshot](picker.png?raw=true "Title")
+
 This repo contains the "synth picker" I use to randomly select a synthesizer to use.
 
 This is not really something I want to make into a long-term project with a community, this is just sharing something I think others could find useful.
