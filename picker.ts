@@ -1,6 +1,6 @@
 interface Synth {
     name: string;
-    style: "Hardware" | "MPC" | "Software";
+    style: "Hardware" | "MPC" | "Software" | "Groovebox";
     roles: string[];
     numberChannels: number;
 }
@@ -15,6 +15,7 @@ const roles = [
 
 const styles = [
     "Hardware",
+    "Groovebox",
     "MPC",
     "Software",
 ]
@@ -39,6 +40,30 @@ const synthList: Synth[] = [
         numberChannels: 16
     },
     {
+        name: "K5000R",
+        style: "Hardware",
+        roles: ["Lead", "Bass", "Pad"],
+        numberChannels: 4
+    },
+    {
+        name: "V-Synth",
+        style: "Hardware",
+        roles: ["Lead", "Bass", "Pad", "Drum"],
+        numberChannels: 16
+    },
+    {
+        name: "CyDrum",
+        style: "Hardware",
+        roles: ["Drum", "Lead", "Bass"],
+        numberChannels: 8
+    },
+    {
+        name: "Tracker Mini",
+        style: "Groovebox",
+        roles: ["Sequencer", "Lead", "Bass", "Pad", "Drum"],
+        numberChannels: 11, // 8 sample, 3 synth
+    },
+    {
         name: "Iridium",
         style: "Hardware",
         roles: ["Lead", "Bass", "Pad"],
@@ -46,20 +71,44 @@ const synthList: Synth[] = [
     },
     {
         name: "Digitone",
+        style: "Groovebox",
+        roles: ["Sequencer", "Lead", "Bass", "Pad", "Drum"],
+        numberChannels: 16
+    },
+    {
+        name: "Syntakt",
         style: "Hardware",
+        roles: ["Lead", "Bass", "Drum"],
+        numberChannels: 12
+    },
+    {
+        name: "QY100",
+        style: "Groovebox",
+        roles: ["Sequencer", "Lead", "Bass", "Pad", "Drum"],
+        numberChannels: 16
+    },
+    {
+        name: "MP-7",
+        style: "Groovebox",
         roles: ["Sequencer", "Lead", "Bass", "Pad", "Drum"],
         numberChannels: 16
     },
     {
         name: "M8",
-        style: "Hardware",
+        style: "Groovebox",
         roles: ["Sequencer", "Lead", "Bass", "Pad", "Drum"],
         numberChannels: 8
     },
     {
+        name: "Multi/Poly",
+        style: "Hardware",
+        roles: ["Lead", "Bass", "Pad"],
+        numberChannels: 4
+    },
+    {
         name: "Modwave",
         style: "Hardware",
-        roles: ["Lead", "Bass", "Pad"], // Technically has drums, but nah.
+        roles: ["Lead", "Bass", "Pad", "Drum"],
         numberChannels: 2
     },
     {
@@ -82,15 +131,27 @@ const synthList: Synth[] = [
     },
     {
         name: "MC707",
-        style: "Hardware",
-        roles: ["Lead", "Bass", "Pad", "Drum"], // Technically sequencer too, but not hooked up for midi out
+        style: "Groovebox",
+        roles: ["Lead", "Bass", "Pad", "Drum", "Sequencer"],
         numberChannels: 8
     },
     {
         name: "Deluge",
-        style: "Hardware",
+        style: "Groovebox",
         roles: ["Sequencer", "Lead", "Bass", "Pad", "Drum"],
         numberChannels: 16
+    },
+    {
+        name: "Steampipe",
+        style: "Hardware",
+        roles: ["Lead", "Bass", "Drum"], // This will be interesting to see.
+        numberChannels: 1
+    },
+    {
+        name: "Tempera",
+        style: "Hardware",
+        roles: ["Lead", "Bass", "Pad", "Drum"],
+        numberChannels: 1
     },
     {
         name: "Ultra Proteus",
@@ -125,19 +186,19 @@ const synthList: Synth[] = [
     {
         name: "WaveState",
         style: "Hardware",
-        roles: ["Lead", "Bass", "Pad"], // Technically has drums, but nah.
+        roles: ["Lead", "Bass", "Pad", "Drum"],
         numberChannels: 4
     },
     {
         name: "XFM",
         style: "Hardware",
-        roles: ["Lead", "Bass", "Pad"],
+        roles: ["Lead", "Bass", "Pad"], // Could do drums, maybe.
         numberChannels: 1
     },
     {
         name: "JD-08",
         style: "Hardware",
-        roles: ["Lead", "Bass", "Pad"],
+        roles: ["Lead", "Bass", "Pad", "Drum"],
         numberChannels: 2
     },
     {
@@ -165,9 +226,21 @@ const synthList: Synth[] = [
         numberChannels: 6
     },
     {
+        name: "EssenceFM",
+        style: "Hardware",
+        roles: ["Lead", "Bass", "Pad"],
+        numberChannels: 16
+    },
+    {
         name: "Modx",
         style: "Hardware",
         roles: ["Lead", "Bass", "Pad", "Drum"],
+        numberChannels: 16
+    },
+    {
+        name: "RM1x",
+        style: "Groovebox",
+        roles: ["Sequencer", "Lead", "Bass", "Pad", "Drum"],
         numberChannels: 16
     },
     {
@@ -184,10 +257,16 @@ const synthList: Synth[] = [
     },
     // MPC Internal
     {
-        name: "MPC",
+        name: "MPC Key 61",
         style: "MPC",
         roles: ["Sequencer"],
-        numberChannels: 16 // Infinite?
+        numberChannels: 1
+    },
+    {
+        name: "MPC Live 2",
+        style: "Groovebox", // Duplicate to show entry in groovebox selector
+        roles: ["Sequencer"],
+        numberChannels: 1
     },
     {
         name: "MPC Sampler",
@@ -226,9 +305,15 @@ const synthList: Synth[] = [
         numberChannels: 8
     },
     {
-        name: "MPC Instruments", // Piano, Organ, Strings.
+        name: "MPC Piano",
         style: "MPC",
         roles: ["Lead", "Bass"],
+        numberChannels: 8
+    },
+    {
+        name: "MPC Strings",
+        style: "MPC",
+        roles: ["Lead", "Pad"],
         numberChannels: 8
     },
     {
@@ -277,6 +362,12 @@ const synthList: Synth[] = [
     },
     {
         name: "Vital",
+        style: "Software",
+        roles: ["Lead", "Bass", "Pad"],
+        numberChannels: 16
+    },
+    {
+        name: "Serum",
         style: "Software",
         roles: ["Lead", "Bass", "Pad"],
         numberChannels: 16
@@ -702,6 +793,16 @@ const synthList: Synth[] = [
     },
 ]
 
+// Sanity check, make sure none of the synths have roles that don't exist
+for (const synth of synthList) {
+    for (const role of synth.roles) {
+        if (!roles.includes(role)) {
+            console.error(`${synth.name} has role ${role} which doesn't exist`);
+            throw new Error("Invalid role"+role);
+        }
+    }
+}
+
 const currentStyles = [...styles];
 
 class SynthRole extends HTMLDivElement {
@@ -711,7 +812,7 @@ class SynthRole extends HTMLDivElement {
     _selection: HTMLSelectElement;
     _lockElement: HTMLInputElement;
 
-    constructor(role: string) {
+    constructor(role: string, root: boolean = true) {
         super();
         this.role = role;
         this.locked = false;
@@ -752,6 +853,19 @@ class SynthRole extends HTMLDivElement {
             randomizeRole(this);
         });
         this.appendChild(randomizeButton);
+        const addRoleButton = document.createElement("button");
+        addRoleButton.textContent = root ? "+" : "-";
+        addRoleButton.addEventListener("click", () => {
+            if (root) {
+                const newRole = new SynthRole(role, false)
+                rolePickers.push(newRole);
+                this.after(newRole);
+            } else {
+                this.remove();
+                rolePickers.splice(rolePickers.indexOf(this), 1);
+            }
+        });
+        this.appendChild(addRoleButton);
     }
 
     tryAssignSynth(synth: Synth | undefined): boolean {
