@@ -1,26 +1,17 @@
-interface Synth {
-    name: string;
-    style: "Hardware" | "MPC" | "Software" | "Groovebox";
-    roles: string[];
-    numberChannels: number;
-}
-
 const roles = [
     "Sequencer",
     "Lead",
     "Bass",
     "Pad",
     "Drum",
-]
-
+];
 const styles = [
     "Hardware",
     "Groovebox",
     "MPC",
     "Software",
-]
-
-const synthList: Synth[] = [
+];
+const synthList = [
     {
         name: "Hydrasynth",
         style: "Hardware",
@@ -421,7 +412,6 @@ const synthList: Synth[] = [
         roles: ["Lead", "Bass", "Pad", "Drum"],
         numberChannels: 16
     },
-
     // Korg
     {
         name: "Electribe-R VST",
@@ -501,7 +491,6 @@ const synthList: Synth[] = [
         roles: ["Lead", "Bass", "Pad"], // Technically has drums, but nah.
         numberChannels: 16
     },
-
     // Arturia
     {
         name: "Pigments",
@@ -575,7 +564,6 @@ const synthList: Synth[] = [
         roles: ["Lead", "Bass", "Pad"],
         numberChannels: 16
     },
-
     {
         name: "Emulator II V",
         style: "Software",
@@ -696,8 +684,6 @@ const synthList: Synth[] = [
         roles: ["Lead", "Bass"], // Does "pad" make sense for a piano?
         numberChannels: 16
     },
-
-
     // NI
     {
         name: "Battery",
@@ -735,7 +721,6 @@ const synthList: Synth[] = [
         roles: ["Lead", "Bass", "Pad"],
         numberChannels: 16
     },
-
     // Bitwig
     {
         name: "Bitwig",
@@ -791,28 +776,24 @@ const synthList: Synth[] = [
         roles: ["Lead", "Bass", "Pad"],
         numberChannels: 16
     },
-]
-
+];
 // Sanity check, make sure none of the synths have roles that don't exist
 for (const synth of synthList) {
     for (const role of synth.roles) {
         if (!roles.includes(role)) {
             console.error(`${synth.name} has role ${role} which doesn't exist`);
-            throw new Error("Invalid role"+role);
+            throw new Error("Invalid role" + role);
         }
     }
 }
-
 const currentStyles = [...styles];
-
 class SynthRole extends HTMLDivElement {
-    role: string;
-    locked: boolean;
-    synth: Synth | null;
-    _selection: HTMLSelectElement;
-    _lockElement: HTMLInputElement;
-
-    constructor(role: string, root: boolean = true) {
+    role;
+    locked;
+    synth;
+    _selection;
+    _lockElement;
+    constructor(role, root = true) {
         super();
         this.role = role;
         this.locked = false;
@@ -857,18 +838,18 @@ class SynthRole extends HTMLDivElement {
         addRoleButton.textContent = root ? "+" : "-";
         addRoleButton.addEventListener("click", () => {
             if (root) {
-                const newRole = new SynthRole(role, false)
+                const newRole = new SynthRole(role, false);
                 rolePickers.push(newRole);
                 this.after(newRole);
-            } else {
+            }
+            else {
                 this.remove();
                 rolePickers.splice(rolePickers.indexOf(this), 1);
             }
         });
         this.appendChild(addRoleButton);
     }
-
-    tryAssignSynth(synth: Synth | undefined): boolean {
+    tryAssignSynth(synth) {
         if (!synth) {
             this._selection.value = "None";
             return true;
@@ -881,7 +862,6 @@ class SynthRole extends HTMLDivElement {
         this._selection.value = synth.name;
         return true;
     }
-
     updateStyle() {
         for (const option of this._selection.options) {
             if (option.textContent === "None") {
@@ -897,18 +877,15 @@ class SynthRole extends HTMLDivElement {
     }
 }
 window.customElements.define("synth-role", SynthRole, { extends: "div" });
-
-function shuffle<T>(array: T[]): T[] {
+function shuffle(array) {
     for (let i = array.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
         [array[i], array[j]] = [array[j], array[i]];
     }
     return array;
 }
-
-const rolePickers: SynthRole[] = roles.map(role => new SynthRole(role));
-
-function randomizeRole(role: SynthRole) {
+const rolePickers = roles.map(role => new SynthRole(role));
+function randomizeRole(role) {
     let roleSynths = synthList.filter(synth => synth.roles.includes(role.role));
     shuffle(roleSynths);
     for (const synth of roleSynths) {
@@ -918,7 +895,6 @@ function randomizeRole(role: SynthRole) {
     }
     role.tryAssignSynth(undefined);
 }
-
 function randomizeAll() {
     shuffle(rolePickers);
     const unlockedRoles = rolePickers.filter(role => !role.locked);
@@ -926,7 +902,6 @@ function randomizeAll() {
         randomizeRole(role);
     }
 }
-
 const root = document.getElementById("root");
 const stylePicker = document.createElement("div");
 stylePicker.classList.add("style-picker");
@@ -939,7 +914,8 @@ for (const style of styles) {
     check.addEventListener("change", () => {
         if (check.checked) {
             currentStyles.push(style);
-        } else {
+        }
+        else {
             currentStyles.splice(currentStyles.indexOf(style), 1);
         }
         rolePickers.forEach(role => role.updateStyle());
@@ -959,3 +935,4 @@ randomizeAllButton.classList.add("randomize-all");
 randomizeAllButton.textContent = "Randomize All";
 randomizeAllButton.addEventListener("click", randomizeAll);
 root.appendChild(randomizeAllButton);
+//# sourceMappingURL=picker.js.map
